@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.JiaoxueziyuanDao">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        a.id as id
+        ,a.laoshi_id as laoshiId
+        ,a.jiaoxueziyuan_uuid_number as jiaoxueziyuanUuidNumber
+        ,a.jiaoxueziyuan_name as jiaoxueziyuanName
+        ,a.jiaoxueziyuan_photo as jiaoxueziyuanPhoto
+        ,a.jiaoxueziyuan_video as jiaoxueziyuanVideo
+        ,a.jiaoxueziyuan_file as jiaoxueziyuanFile
+        ,a.zan_number as zanNumber
+        ,a.cai_number as caiNumber
+        ,a.jiaoxueziyuan_types as jiaoxueziyuanTypes
+        ,a.jiaoxueziyuan_clicknum as jiaoxueziyuanClicknum
+        ,a.jiaoxueziyuan_content as jiaoxueziyuanContent
+        ,a.shangxia_types as shangxiaTypes
+        ,a.jiaoxueziyuan_delete as jiaoxueziyuanDelete
+        ,a.create_time as createTime
+    </sql>
+    <select id="selectListView" parameterType="map" resultType="com.entity.view.JiaoxueziyuanView" >
+        SELECT
+        <include refid="Base_Column_List" />
+
+--         级联表的字段
+        ,laoshi.laoshi_name as laoshiName
+        ,laoshi.laoshi_phone as laoshiPhone
+        ,laoshi.laoshi_photo as laoshiPhoto
+        ,laoshi.laoshi_email as laoshiEmail
+
+        FROM jiaoxueziyuan  a
+        left JOIN laoshi laoshi ON a.laoshi_id = laoshi.id
+
+        <where>
+            <if test="params.ids != null">
+                and a.id in
+                <foreach item="item" index="index" collection="params.ids" open="(" separator="," close=")">
+                #{item}
+                </foreach>
+            </if>
+            <if test="params.laoshiId != null and params.laoshiId != ''">
+                and (
+                    a.laoshi_id = #{params.laoshiId}
+                )
+            </if>
+            <if test=" params.jiaoxueziyuanUuidNumber != '' and params.jiaoxueziyuanUuidNumber != null and params.jiaoxueziyuanUuidNumber != 'null' ">
+                and a.jiaoxueziyuan_uuid_number like CONCAT('%',#{params.jiaoxueziyuanUuidNumber},'%')
+            </if>
+            <if test=" params.jiaoxueziyuanName != '' and params.jiaoxueziyuanName != null and params.jiaoxueziyuanName != 'null' ">
+                and a.jiaoxueziyuan_name like CONCAT('%',#{params.jiaoxueziyuanName},'%')
+            </if>
+            <if test=" params.jiaoxueziyuanVideo != '' and params.jiaoxueziyuanVideo != null and params.jiaoxueziyuanVideo != 'null' ">
+                and a.jiaoxueziyuan_video like CONCAT('%',#{params.jiaoxueziyuanVideo},'%')
+            </if>
+            <if test="params.zanNumberStart != null and params.zanNumberStart != ''">
+                <![CDATA[  and a.zan_number >= #{params.zanNumberStart}   ]]>
+            </if>
+            <if test="params.zanNumberEnd != null and params.zanNumberEnd != ''">
+                <![CDATA[  and a.zan_number <= #{params.zanNumberEnd}   ]]>
+            </if>
+             <if test="params.zanNumber != null and params.zanNumber != ''">
+                and a.zan_number = #{params.zanNumber}
+             </if>
+            <if test="params.caiNumberStart != null and params.caiNumberStart != ''">
+                <![CDATA[  and a.cai_number >= #{params.caiNumberStart}   ]]>
+            </if>
+            <if test="params.caiNumberEnd != null and params.caiNumberEnd != ''">
+                <![CDATA[  and a.cai_number <= #{params.caiNumberEnd}   ]]>
+            </if>
+             <if test="params.caiNumber != null and params.caiNumber != ''">
+                and a.cai_number = #{params.caiNumber}
+             </if>
+            <if test="params.jiaoxueziyuanTypes != null and params.jiaoxueziyuanTypes != ''">
+                and a.jiaoxueziyuan_types = #{params.jiaoxueziyuanTypes}
+            </if>
+            <if test="params.jiaoxueziyuanClicknumStart != null and params.jiaoxueziyuanClicknumStart != ''">
+                <![CDATA[  and a.jiaoxueziyuan_clicknum >= #{params.jiaoxueziyuanClicknumStart}   ]]>
+            </if>
+            <if test="params.jiaoxueziyuanClicknumEnd != null and params.jiaoxueziyuanClicknumEnd != ''">
+                <![CDATA[  and a.jiaoxueziyuan_clicknum <= #{params.jiaoxueziyuanClicknumEnd}   ]]>
+            </if>
+             <if test="params.jiaoxueziyuanClicknum != null and params.jiaoxueziyuanClicknum != ''">
+                and a.jiaoxueziyuan_clicknum = #{params.jiaoxueziyuanClicknum}
+             </if>
+            <if test=" params.jiaoxueziyuanContent != '' and params.jiaoxueziyuanContent != null and params.jiaoxueziyuanContent != 'null' ">
+                and a.jiaoxueziyuan_content like CONCAT('%',#{params.jiaoxueziyuanContent},'%')
+            </if>
+            <if test="params.shangxiaTypes != null and params.shangxiaTypes != ''">
+                and a.shangxia_types = #{params.shangxiaTypes}
+            </if>
+            <if test="params.jiaoxueziyuanDeleteStart != null and params.jiaoxueziyuanDeleteStart != ''">
+                <![CDATA[  and a.jiaoxueziyuan_delete >= #{params.jiaoxueziyuanDeleteStart}   ]]>
+            </if>
+            <if test="params.jiaoxueziyuanDeleteEnd != null and params.jiaoxueziyuanDeleteEnd != ''">
+                <![CDATA[  and a.jiaoxueziyuan_delete <= #{params.jiaoxueziyuanDeleteEnd}   ]]>
+            </if>
+             <if test="params.jiaoxueziyuanDelete != null and params.jiaoxueziyuanDelete != ''">
+                and a.jiaoxueziyuan_delete = #{params.jiaoxueziyuanDelete}
+             </if>
+
+                <!-- 判断老师的id不为空 -->
+            <if test=" params.laoshiIdNotNull != '' and params.laoshiIdNotNull != null and params.laoshiIdNotNull != 'null' ">
+                and a.laoshi_id IS NOT NULL
+            </if>
+            <if test=" params.laoshiName != '' and params.laoshiName != null and params.laoshiName != 'null' ">
+                and laoshi.laoshi_name like CONCAT('%',#{params.laoshiName},'%')
+            </if>
+            <if test=" params.laoshiPhone != '' and params.laoshiPhone != null and params.laoshiPhone != 'null' ">
+                and laoshi.laoshi_phone like CONCAT('%',#{params.laoshiPhone},'%')
+            </if>
+            <if test=" params.laoshiEmail != '' and params.laoshiEmail != null and params.laoshiEmail != 'null' ">
+                and laoshi.laoshi_email like CONCAT('%',#{params.laoshiEmail},'%')
+            </if>
+        </where>
+
+        order by a.${params.orderBy} desc 
+    </select>
+
+</mapper>
